@@ -7,11 +7,15 @@ apt-get update && apt-get upgrade --yes
 RUN apt-get update && apt-get install -y \
 cmake \
 cmake-curses-gui \
-clang \
-lld \
-lldb \
+g++-8 \
+binutils-gold \
+gdb \
 ninja-build \
-python
+python \
+zlib1g-dev \
+rr
+
+RUN cd /usr/include && ln -s locale.h xlocale.h
 
 RUN groupadd -g 1000 builduser && useradd -u 1000 -g 1000 builduser
 
@@ -19,5 +23,9 @@ COPY src/build_user_src.rc /build_user_src.rc
 COPY src/start_shell.sh /start_shell.sh
 COPY src/setup_clang_build.sh /build_env/setup_clang_build.sh
 
-ENV CC clang
-ENV CXX clang++
+RUN chown -R 1000:1000 /usr/local
+
+VOLUME /home/builduser/
+
+ENV CC gcc-8
+ENV CXX g++-8
