@@ -4,8 +4,8 @@
 
 1. Install Docker CE
 2. Inside of the `files` directory:
-  1. Perform a standard llvm setup, in a folder named `llvm`
-  2. Create a `build` directory
+   1. Perform a standard llvm setup, in a folder named `llvm`
+   2. Create a `build` directory
 3. Enter the `build_sys` directory
 4. Run `force_update_build_env.sh`
 5. Run `enter_build_env.sh`
