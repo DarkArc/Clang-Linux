@@ -9,6 +9,7 @@ cmake \
 cmake-curses-gui \
 g++-8 \
 binutils-gold \
+libtinfo-dev \
 gdb \
 ninja-build \
 python \
