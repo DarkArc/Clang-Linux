@@ -21,7 +21,7 @@ RUN groupadd -g 1000 builduser && useradd -u 1000 -g 1000 builduser
 
 COPY src/build_user_src.rc /build_user_src.rc
 COPY src/start_shell.sh /start_shell.sh
-COPY src/setup_clang_build.sh /build_env/setup_clang_build.sh
+COPY src/setup_llvm_build.sh /setup_llvm_build.sh
 
 RUN chown -R 1000:1000 /usr/local
 
