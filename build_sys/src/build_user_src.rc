@@ -118,6 +118,4 @@ fi
 
 export PATH="/custom_commands:$PATH"
 
-alias ninja="ninja -j20"
-
 cd /build_env

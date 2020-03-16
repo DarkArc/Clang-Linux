@@ -1,9 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-# Old version of this with compile commands exported for ide support
-# cmake -G Ninja -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_USE_LINKER=gold -DLLVM_USE_SPLIT_DWARF=ON -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" ../llvm/
-
-if [ -z "$1" ] 
+if [ -z "$1" ]
 then
   BUILD_PATH='.'
 else
@@ -21,4 +18,19 @@ then
 fi
 echo "Using source directory: $SRC_PATH"
 
-cmake -G Ninja -DLLVM_TARGETS_TO_BUILD="X86" -DLLVM_ENABLE_PROJECTS="clang;libcxx;libcxxabi" -DLLVM_USE_LINKER=gold -DLLVM_USE_SPLIT_DWARF=ON -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" -DLLVM_PARALLEL_LINK_JOBS=4 $SRC_PATH
+THREAD_NUM="$(nproc)"
+RAM_GIGS="$(awk '/MemTotal/ { printf "%.0f \n", $2/1024/1024+1 }' /proc/meminfo)"
+
+JOB_RAM_UNITS=$(bc <<< "scale=0; $RAM_GIGS / 1.5")
+JOB_NUM="$(( $THREAD_NUM > $JOB_RAM_UNITS ? $JOB_RAM_UNITS : $THREAD_NUM ))"
+
+LINK_RAM_UNITS=$(bc <<< "scale=0; $RAM_GIGS / 4")
+LINK_NUM="$(( $THREAD_NUM > $LINK_RAM_UNITS ? $LINK_RAM_UNITS : $THREAD_NUM ))"
+
+echo "Computed job count: $JOB_NUM"
+echo "Computed linker count: $LINK_NUM"
+
+# Old version of this with compile commands exported for ide support
+# cmake -G Ninja -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_USE_LINKER=gold -DLLVM_USE_SPLIT_DWARF=ON -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" ../llvm/
+
+cmake -G Ninja -DLLVM_TARGETS_TO_BUILD="X86" -DLLVM_ENABLE_PROJECTS="clang;libcxx;libcxxabi" -DLLVM_USE_LINKER=gold -DLLVM_USE_SPLIT_DWARF=ON -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" -DLLVM_PARALLEL_LINK_JOBS="$LINK_NUM" -DLLVM_PARALLEL_COMPILE_JOBS="$JOB_NUM" "$SRC_PATH"

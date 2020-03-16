@@ -5,6 +5,7 @@ RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1us.\2/" /etc/a
 apt-get update && apt-get upgrade --yes
 
 RUN apt-get update && apt-get install -y \
+bc \
 cmake \
 cmake-curses-gui \
 g++-8 \
