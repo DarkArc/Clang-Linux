@@ -10,7 +10,7 @@
 4. Run `force_update_build_env.sh`
 5. Run `enter_build_env.sh`
 6. Enter `build`
-7. Run `llvm_make_init .`
+7. Run `llvm_make_debug .` or `llvm_make_release .`
 8. Run `ninja`
 
 ### Example Directory Structure

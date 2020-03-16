@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Old version of this with compile commands exported for ide support
+# cmake -G Ninja -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_USE_LINKER=gold -DLLVM_USE_SPLIT_DWARF=ON -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" ../llvm/
+
+if [ -z "$1" ] 
+then
+  BUILD_PATH='.'
+else
+  BUILD_PATH="$1"
+fi
+
+BUILD_PATH="$(readlink -f $BUILD_PATH)"
+SRC_PATH="$(readlink -f $BUILD_PATH/../llvm-project/llvm)"
+
+echo "Usuing build directory: $BUILD_PATH"
+if [ -z $SRC_PATH ]
+then
+  echo "No llvm source found at $BUILD_PATH/llvm-project/llvm"
+  exit 1
+fi
+echo "Using source directory: $SRC_PATH"
+
+cmake -G Ninja -DLLVM_TARGETS_TO_BUILD="X86" -DLLVM_ENABLE_PROJECTS="clang;libcxx;libcxxabi" -DLLVM_USE_LINKER=gold -DLLVM_USE_SPLIT_DWARF=ON -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=gold -Wl,--gdb-index" -DLLVM_PARALLEL_LINK_JOBS=4 $SRC_PATH
