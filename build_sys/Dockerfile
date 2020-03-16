@@ -13,8 +13,11 @@ libtinfo-dev \
 gdb \
 ninja-build \
 python \
+libfindbin-libs-perl \
 zlib1g-dev \
-rr
+rr \
+python-psutil \
+exuberant-ctags
 
 RUN cd /usr/include && ln -s locale.h xlocale.h
 
@@ -22,7 +25,8 @@ RUN groupadd -g 1000 builduser && useradd -u 1000 -g 1000 builduser
 
 COPY src/build_user_src.rc /build_user_src.rc
 COPY src/start_shell.sh /start_shell.sh
-COPY src/setup_llvm_build.sh /setup_llvm_build.sh
+
+ADD src/commands /custom_commands
 
 RUN chown -R 1000:1000 /usr/local
 
