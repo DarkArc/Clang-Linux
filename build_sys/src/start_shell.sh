@@ -1,2 +1,2 @@
 #!/bin/bash
-/bin/bash --rcfile /build_user_src.rc
+nice -19 /bin/bash --rcfile /build_user_src.rc
