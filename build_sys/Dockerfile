@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
 bc \
 cmake \
 cmake-curses-gui \
-g++-8 \
+g++-9 \
 binutils-gold \
 libtinfo-dev \
 gdb \
@@ -33,5 +33,5 @@ RUN chown -R 1000:1000 /usr/local
 
 VOLUME /home/builduser/
 
-ENV CC gcc-8
-ENV CXX g++-8
+ENV CC gcc-9
+ENV CXX g++-9
