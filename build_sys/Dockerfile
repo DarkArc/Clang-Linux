@@ -1,24 +1,15 @@
-FROM ubuntu:latest
+FROM archlinux:latest
 
-# Use US Mirror
-RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1us.\2/" /etc/apt/sources.list && \
-apt-get update && apt-get upgrade --yes
-
-RUN apt-get update && apt-get install -y \
+RUN pacman -Syu --noconfirm && pacman -S --noconfirm \
 bc \
 cmake \
-cmake-curses-gui \
-g++-9 \
-binutils-gold \
-libtinfo-dev \
+clang \
+binutils \
 gdb \
-ninja-build \
+ninja \
 python \
-libfindbin-libs-perl \
-zlib1g-dev \
-rr \
-python-psutil \
-exuberant-ctags
+diffutils \
+python-psutil
 
 RUN cd /usr/include && ln -s locale.h xlocale.h
 
@@ -33,5 +24,5 @@ RUN chown -R 1000:1000 /usr/local
 
 VOLUME /home/builduser/
 
-ENV CC gcc-9
-ENV CXX g++-9
+ENV CC clang
+ENV CXX clang++
