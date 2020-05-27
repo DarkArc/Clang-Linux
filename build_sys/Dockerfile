@@ -9,16 +9,15 @@ gdb \
 ninja \
 python \
 diffutils \
-python-psutil
+python-psutil \
+fish
 
-RUN cd /usr/include && ln -s locale.h xlocale.h
+RUN cd /usr/include && ln -s locale.h xlocale.h && mkdir /build_sys_internal
 
 RUN groupadd -g 1000 builduser && useradd -u 1000 -g 1000 builduser
 
-COPY src/build_user_src.rc /build_user_src.rc
-COPY src/start_shell.sh /start_shell.sh
-
-ADD src/commands /custom_commands
+ADD src/shell /build_sys_internal/shell
+ADD src/commands /build_sys_internal/custom_commands
 
 RUN chown -R 1000:1000 /usr/local
 
