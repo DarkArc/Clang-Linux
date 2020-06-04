@@ -10,7 +10,8 @@ ninja \
 python \
 diffutils \
 python-psutil \
-fish
+fish \
+git
 
 RUN cd /usr/include && ln -s locale.h xlocale.h && mkdir /build_sys_internal
 
