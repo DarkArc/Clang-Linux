@@ -45,7 +45,8 @@ RUN dnf install -y \
   capnproto-libs \
   fish \
   git \
-  which
+  which \
+  findutils
 COPY --from=0 /home/build/install/ /usr/local/
 
 RUN cd /usr/include && ln -s locale.h xlocale.h && mkdir /build_sys_internal
