@@ -38,6 +38,7 @@ RUN dnf install -y \
   clang \
   binutils \
   gdb \
+  lldb \
   ninja-build \
   python \
   diffutils \
