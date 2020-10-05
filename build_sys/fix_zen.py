@@ -5,6 +5,9 @@ import os
 import struct
 import sys
 
+if not os.geteuid() == 0:
+    sys.exit("\nOnly root can run this script\n")
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--reset', action='store_true')
 args = parser.parse_args()
