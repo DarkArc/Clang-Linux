@@ -1,34 +1,3 @@
-# Build RR
-FROM fedora:latest
-WORKDIR /home/build
-RUN dnf install -y \
-  ccache \
-  cmake \
-  make \
-  gcc \
-  gcc-c++ \
-  gdb \
-  libgcc \
-  libgcc.i686 \
-  glibc-devel \
-  glibc-devel.i686 \
-  libstdc++-devel \
-  libstdc++-devel.i686 \
-  python3-pexpect \
-  man-pages \
-  ninja-build \
-  capnproto \
-  capnproto-libs \
-  capnproto-devel \
-  ninja-build \
-  git
-RUN ln -s /usr/include/c++/10/i686-redhat-linux /usr/include/c++/10/x86_64-redhat-linux
-RUN git clone https://github.com/mozilla/rr.git
-RUN mkdir build && cd build && \
-  cmake -DCMAKE_INSTALL_PREFIX="/home/build/install/" -G Ninja ../rr && \
-  cmake --build . && \
-  cmake --build . --target install
-
 # Build the Build System Container
 FROM fedora:latest
 
@@ -36,9 +5,14 @@ RUN dnf install -y \
   bc \
   cmake \
   clang \
+# Include llvm-strip binary
+  llvm \
+# Easily include the pearl deps
+  clang-analyzer \
   binutils \
   gdb \
   lldb \
+  rr \
   ninja-build \
   python \
   diffutils \
@@ -48,7 +22,6 @@ RUN dnf install -y \
   git \
   which \
   findutils
-COPY --from=0 /home/build/install/ /usr/local/
 
 RUN cd /usr/include && ln -s locale.h xlocale.h && mkdir /build_sys_internal
 
